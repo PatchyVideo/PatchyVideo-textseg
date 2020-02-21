@@ -44,9 +44,7 @@ func unique(elements []string) []string {
 			// Record this element as an encountered element.
 			encountered[elements[v]] = true
 			// Append to result slice.
-			if len(elements[v]) > 2 {
-				result = append(result, elements[v])
-			}
+			result = append(result, elements[v])
 		}
 	}
 	// Return the new slice.
