@@ -151,8 +151,7 @@ func segTextSearch(w http.ResponseWriter, r *http.Request) {
 		tmpSegResult := seger.Cut(splitText[i], true)
 		segResult = append(segResult, tmpSegResult...)
 	}
-	allWords := unique(segResult)
-	resp := segResponse{allWords}
+	resp := segResponse{segResult}
 	js, err := json.Marshal(resp)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
