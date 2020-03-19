@@ -144,7 +144,6 @@ func segTextSearch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	requestBodyStr := strings.ToLower(string(requestBody))
-	fmt.Println("seg search")
 	segResult := make([]string, 0, len(requestBody))
 	splitText := strings.FieldsFunc(requestBodyStr, split)
 	for i := 0; i < len(splitText); i++ {
@@ -169,7 +168,6 @@ func segTextIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	requestBodyStr := strings.ToLower(string(requestBody))
-	fmt.Println("seg index")
 	segResult := make([]string, 0, len(requestBody))
 	splitText := strings.FieldsFunc(requestBodyStr, split)
 	for i := 0; i < len(splitText); i++ {
@@ -315,5 +313,11 @@ func split(r rune) bool {
 		r == '￬' ||
 		r == '￭' ||
 		r == '￮' ||
-		r == '・'
+		r == '・' ||
+		r == '◊' ||
+		r == '→' ||
+		r == '←' ||
+		r == '↑' ||
+		r == '↓' ||
+		r == '↔'
 }
