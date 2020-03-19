@@ -24,7 +24,7 @@ var (
 
 func main() {
 	fmt.Println("[+] TextSeg start")
-	seger.LoadDict("touhou.txt,touhou2.txt,chs.txt,cht.txt,jpn.txt")
+	seger.LoadDict("touhou.txt,touhou2.txt,networds.txt,chs.txt,cht.txt,jpn.txt")
 	fmt.Println("[+] Done loading dict")
 	http.HandleFunc("/s/", segTextSearch)
 	http.HandleFunc("/i/", segTextIndex)
