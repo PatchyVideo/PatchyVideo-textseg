@@ -27,6 +27,7 @@ func main() {
 	seger.LoadDict("touhou.txt,touhou2.txt,networds.txt,chs.txt,cht.txt,jpn.txt")
 	fmt.Println("[+] Done loading dict")
 	http.HandleFunc("/s/", segTextSearch)
+	http.HandleFunc("/b/", segTextBigram)
 	http.HandleFunc("/i/", segTextIndex)
 	http.HandleFunc("/d/", segTextDisplay)
 	http.HandleFunc("/t/", segTextTouhou)
@@ -150,6 +151,35 @@ func segTextSearch(w http.ResponseWriter, r *http.Request) {
 		tmpSegResult := seger.Cut(splitText[i], true)
 		segResult = append(segResult, tmpSegResult...)
 	}
+	resp := segResponse{segResult}
+	js, err := json.Marshal(resp)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
+}
+
+func segTextBigram(w http.ResponseWriter, r *http.Request) {
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	requestBodyStr := strings.ToLower(string(requestBody))
+	segResult := make([]string, 0, len(requestBody))
+	splitText := strings.FieldsFunc(requestBodyStr, split)
+	for i := 0; i < len(splitText); i++ {
+		tmpSegResult := seger.Cut(splitText[i], true)
+		segResult = append(segResult, tmpSegResult...)
+	}
+	bigrams := make([]string, 0, len(segResult)-1)
+	for j := 0; j < len(segResult)-1; j++ {
+		bigrams = append(bigrams, segResult[j]+segResult[j+1])
+	}
+	segResult = append(segResult, bigrams...)
 	resp := segResponse{segResult}
 	js, err := json.Marshal(resp)
 	if err != nil {
