@@ -60,7 +60,10 @@ func segTextDisplay(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	requestBodyStr := strings.ToLower(string(requestBody))
+	var requestBodyStr = strings.ToLower(string(requestBody))
+	var requestBodyStrNoSpace = strings.Replace(requestBodyStr, " ", "", -1)
+	requestBodyStrNoSpace = strings.Replace(requestBodyStrNoSpace, "　", "", -1)
+	requestBodyStr = requestBodyStr + " " + requestBodyStrNoSpace
 
 	//splitText := strings.FieldsFunc(requestBodyStr, split)
 	//for i := 0; i < len(splitText); i++ {
@@ -102,7 +105,10 @@ func segTextTouhou(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	requestBodyStr := strings.ToLower(string(requestBody))
+	var requestBodyStr = strings.ToLower(string(requestBody))
+	var requestBodyStrNoSpace = strings.Replace(requestBodyStr, " ", "", -1)
+	requestBodyStrNoSpace = strings.Replace(requestBodyStrNoSpace, "　", "", -1)
+	requestBodyStr = requestBodyStr + " " + requestBodyStrNoSpace
 
 	//splitText := strings.FieldsFunc(requestBodyStr, split)
 	//for i := 0; i < len(splitText); i++ {
@@ -144,8 +150,12 @@ func segTextSearch(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	requestBodyStr := strings.ToLower(string(requestBody))
-	segResult := make([]string, 0, len(requestBody))
+	var requestBodyStr = strings.ToLower(string(requestBody))
+	var requestBodyStrNoSpace = strings.Replace(requestBodyStr, " ", "", -1)
+	requestBodyStrNoSpace = strings.Replace(requestBodyStrNoSpace, "　", "", -1)
+	requestBodyStr = requestBodyStr + " " + requestBodyStrNoSpace
+
+	segResult := make([]string, 0, len(requestBodyStr))
 	splitText := strings.FieldsFunc(requestBodyStr, split)
 	for i := 0; i < len(splitText); i++ {
 		tmpSegResult := seger.Cut(splitText[i], true)
@@ -168,8 +178,12 @@ func segTextBigram(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	requestBodyStr := strings.ToLower(string(requestBody))
-	segResult := make([]string, 0, len(requestBody))
+	var requestBodyStr = strings.ToLower(string(requestBody))
+	var requestBodyStrNoSpace = strings.Replace(requestBodyStr, " ", "", -1)
+	requestBodyStrNoSpace = strings.Replace(requestBodyStrNoSpace, "　", "", -1)
+	requestBodyStr = requestBodyStr + " " + requestBodyStrNoSpace
+
+	segResult := make([]string, 0, len(requestBodyStr))
 	splitText := strings.FieldsFunc(requestBodyStr, split)
 	for i := 0; i < len(splitText); i++ {
 		tmpSegResult := seger.Cut(splitText[i], true)
@@ -197,8 +211,12 @@ func segTextIndex(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	requestBodyStr := strings.ToLower(string(requestBody))
-	segResult := make([]string, 0, len(requestBody))
+	var requestBodyStr = strings.ToLower(string(requestBody))
+	var requestBodyStrNoSpace = strings.Replace(requestBodyStr, " ", "", -1)
+	requestBodyStrNoSpace = strings.Replace(requestBodyStrNoSpace, "　", "", -1)
+	requestBodyStr = requestBodyStr + " " + requestBodyStrNoSpace
+
+	segResult := make([]string, 0, len(requestBodyStr))
 	splitText := strings.FieldsFunc(requestBodyStr, split)
 	for i := 0; i < len(splitText); i++ {
 		tmpSegResult := seger.CutSearch(splitText[i], true)
