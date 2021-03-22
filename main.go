@@ -31,6 +31,7 @@ func main() {
 	http.HandleFunc("/i/", segTextIndex)
 	http.HandleFunc("/d/", segTextDisplay)
 	http.HandleFunc("/t/", segTextTouhou)
+	http.HandleFunc("/cb/", segCharBigram)
 	fmt.Println("[+] Serving ...")
 	http.ListenAndServe("0.0.0.0:5005", nil)
 }
@@ -172,6 +173,37 @@ func segTextSearch(w http.ResponseWriter, r *http.Request) {
 	w.Write(js)
 }
 
+func segCharBigram(w http.ResponseWriter, r *http.Request) {
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	var requestBodyStr = strings.ToLower(string(requestBody))
+	var requestBodyStrNoSpace = strings.Replace(requestBodyStr, " ", "", -1)
+	requestBodyStrNoSpace = strings.Replace(requestBodyStrNoSpace, "　", "", -1)
+	requestBodyStr = requestBodyStr + " " + requestBodyStrNoSpace
+
+	chars := make([]rune, 0, len(requestBodyStr))
+	splitText := strings.FieldsFunc(requestBodyStr, split_space)
+	for i := 0; i < len(splitText); i++ {
+		chars = append(chars, []rune(splitText[i])...)
+	}
+	bigrams := make([]string, 0, len(chars)-1)
+	for j := 0; j < len(chars)-1; j++ {
+		bigrams = append(bigrams, string([]rune{chars[j], chars[j+1]}))
+	}
+	resp := segResponse{bigrams}
+	js, err := json.Marshal(resp)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
+}
+
 func segTextBigram(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -233,6 +265,62 @@ func segTextIndex(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
+}
+
+func split_space(r rune) bool {
+	return r == '\t' ||
+	r == ' ' ||
+	r == '　' ||
+	r == '\n' ||
+	r == '\r' ||
+	r == '\v' ||
+	r == '\f' ||
+	r == '\x00' ||
+	r == '\x84' ||
+	r == '\x85' ||
+	r == '\x91' ||
+	r == '\x80' ||
+	r == '\xa0' ||
+	r == '\x8d' ||
+	r == '\x97' ||
+	r == '\x9e' ||
+	r == '\x95' ||
+	r == '\x8e' ||
+	r == '\x9a' ||
+	r == '\x96' ||
+	r == '\x01' ||
+	r == '\x02' ||
+	r == '\x03' ||
+	r == '\x04' ||
+	r == '\x05' ||
+	r == '\x06' ||
+	r == '\x07' ||
+	r == '\x08' ||
+	r == '\x09' ||
+	r == '\x0a' ||
+	r == '\x0b' ||
+	r == '\x0c' ||
+	r == '\x0d' ||
+	r == '\x0e' ||
+	r == '\x0f' ||
+	r == '\x10' ||
+	r == '\x11' ||
+	r == '\x12' ||
+	r == '\x13' ||
+	r == '\x14' ||
+	r == '\x15' ||
+	r == '\x16' ||
+	r == '\x17' ||
+	r == '\x18' ||
+	r == '\x19' ||
+	r == '\x1a' ||
+	r == '\x1b' ||
+	r == '\x1c' ||
+	r == '\x1d' ||
+	r == '\x1e' ||
+	r == '\x1f' ||
+	r == '…' ||
+	r == '♡';
 }
 
 func split(r rune) bool {
